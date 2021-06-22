@@ -1,46 +1,51 @@
 import { Component } from "react";
 import * as crypto from "crypto";
 
-type TwitchProps = {
-  id: string;
+type TwitchProps = {};
+
+type TwitchState = {
   code: string;
-  setId: React.Dispatch<React.SetStateAction<string>>;
-  setCode: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export class TwitchAuth extends Component<TwitchProps> {
-  getLoginUrl = () => {
-    const endpoint = process.env.REACT_APP_TWITCH_ID + "oauth2/authorize?";
-    this.props.setId(crypto.randomBytes(20).toString("hex"));
+export class TwitchAuth extends Component<TwitchProps, TwitchState> {
+  state = { code: "" };
 
-    return (
-      endpoint +
-      new URLSearchParams({
-        client_id: process.env.REACT_APP_CLIENT_ID as string,
-        redirect_uri: "http://localhost:3000",
-        response_type: "code",
-        scope: "user:read:email",
-        state: this.props.id,
-      })
-    );
-  };
-
-  login = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
-    window.location.replace(this.getLoginUrl());
+  constructor(props: TwitchProps | Readonly<TwitchProps>) {
+    super(props);
     const query = window.location.search.substring(
       window.location.search.indexOf("code"),
       window.location.search.indexOf("&scope")
     );
-    this.props.setCode(query);
+    this.state = { code: query };
+  }
+
+  getLoginUrl = () => {
+    if (this.state.code.length === 0) {
+      const endpoint = process.env.REACT_APP_TWITCH_ID + "oauth2/authorize?";
+      return (
+        endpoint +
+        new URLSearchParams({
+          client_id: process.env.REACT_APP_CLIENT_ID as string,
+          redirect_uri: "http://localhost:3000",
+          response_type: "code",
+          scope: "user:read:email",
+          state: "",
+        })
+      );
+    }
+  };
+
+  login = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    window.location.href = this.getLoginUrl() as string;
   };
 
   render() {
     return (
       <>
-        {this.props.code ? (
+        {this.state.code ? (
           <>
-            <span>Your Code: {this.props.code}</span>
+            <span>Your Code: {this.state.code}</span>
           </>
         ) : (
           <button onClick={(e) => this.login(e)} className="twitch">
