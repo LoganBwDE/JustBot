@@ -1,14 +1,18 @@
 import { Component } from "react";
-import * as crypto from "crypto";
+import { USERSTATE } from "../../screens/LoginScreen/LoginScreen";
 
-type TwitchProps = {};
+type TwitchProps = {
+  setLoggedIn: React.Dispatch<React.SetStateAction<USERSTATE>>;
+  handleLogin: () => void;
+};
 
 type TwitchState = {
   code: string;
+  clientID: string;
 };
 
 export class TwitchAuth extends Component<TwitchProps, TwitchState> {
-  state = { code: "" };
+  state = { code: "", clientID: "" };
 
   constructor(props: TwitchProps | Readonly<TwitchProps>) {
     super(props);
@@ -16,7 +20,14 @@ export class TwitchAuth extends Component<TwitchProps, TwitchState> {
       window.location.search.indexOf("code"),
       window.location.search.indexOf("&scope")
     );
-    this.state = { code: query };
+    this.state = { code: query, clientID: "" };
+  }
+
+  async componentDidMount() {
+    if (window.location.search.includes("code")) {
+      window.history.replaceState({}, document.title, "/");
+      await this.getUserData();
+    }
   }
 
   getLoginUrl = () => {
@@ -40,18 +51,58 @@ export class TwitchAuth extends Component<TwitchProps, TwitchState> {
     window.location.href = this.getLoginUrl() as string;
   };
 
+  getUserData = async () => {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    };
+    const urlParams = new URLSearchParams({
+      client_id: process.env.REACT_APP_CLIENT_ID as string,
+      client_secret: process.env.REACT_APP_CLIENT_SECRET as string,
+      code: this.state.code.replace("code=", ""),
+      grant_type: "authorization_code",
+      redirect_uri: "http://localhost:3000",
+    });
+    const response = await (
+      await fetch(
+        (process.env.REACT_APP_TWITCH_ID as string) +
+          "oauth2/token?" +
+          urlParams,
+        requestOptions
+      )
+    ).json();
+    console.log(response);
+
+    const requestOptionsUser = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + response.access_token,
+      },
+    };
+    const responseUser = await (
+      await fetch(
+        (process.env.REACT_APP_TWITCH_ID as string) + "oauth2/userinfo",
+        requestOptionsUser
+      )
+    ).json();
+    const clientID = responseUser.aud;
+    this.state = { code: this.state.code, clientID: clientID };
+    if (clientID === process.env.REACT_APP_CLIENT_ID) {
+      this.props.setLoggedIn(USERSTATE.LOGGED_IN);
+      this.props.handleLogin();
+    } else {
+      this.props.setLoggedIn(USERSTATE.LOGGED_IN_NO_PERM);
+      this.props.handleLogin();
+    }
+  };
+
   render() {
     return (
       <>
-        {this.state.code ? (
-          <>
-            <span>Your Code: {this.state.code}</span>
-          </>
-        ) : (
-          <button onClick={(e) => this.login(e)} className="twitch">
-            Login with Twitch
-          </button>
-        )}
+        <button onClick={(e) => this.login(e)} className="twitch">
+          Login with Twitch
+        </button>
       </>
     );
   }
