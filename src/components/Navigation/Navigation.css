@@ -1,0 +1,30 @@
+#wrapper {
+  overflow-x: hidden;
+}
+
+#page-content-wrapper {
+  min-width: 100vw;
+}
+
+.btnNoActive:hover {
+  background-color: transparent;
+}
+
+.bgDark {
+  color: black;
+}
+
+body.sb-sidenav-toggled #wrapper {
+  margin-left: 0;
+}
+
+@media (min-width: 768px) {
+  #page-content-wrapper {
+    min-width: 0;
+    width: 100%;
+  }
+
+  body.sb-sidenav-toggled #wrapper {
+    margin-left: -15rem;
+  }
+}

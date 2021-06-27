@@ -2,8 +2,7 @@ import { Component } from "react";
 import { USERSTATE } from "../../screens/LoginScreen/LoginScreen";
 
 type TwitchProps = {
-  setLoggedIn: React.Dispatch<React.SetStateAction<USERSTATE>>;
-  handleLogin: () => void;
+  handleLogin: (user: string, loginState: USERSTATE) => void;
 };
 
 type TwitchState = {
@@ -71,7 +70,6 @@ export class TwitchAuth extends Component<TwitchProps, TwitchState> {
         requestOptions
       )
     ).json();
-    console.log(response);
 
     const requestOptionsUser = {
       method: "GET",
@@ -89,11 +87,15 @@ export class TwitchAuth extends Component<TwitchProps, TwitchState> {
     const clientID = responseUser.aud;
     this.state = { code: this.state.code, clientID: clientID };
     if (clientID === process.env.REACT_APP_CLIENT_ID) {
-      this.props.setLoggedIn(USERSTATE.LOGGED_IN);
-      this.props.handleLogin();
+      this.props.handleLogin(
+        responseUser.preferred_username.trim(),
+        USERSTATE.LOGGED_IN
+      );
     } else {
-      this.props.setLoggedIn(USERSTATE.LOGGED_IN_NO_PERM);
-      this.props.handleLogin();
+      this.props.handleLogin(
+        responseUser.preferred_username.trim(),
+        USERSTATE.LOGGED_IN_NO_PERM
+      );
     }
   };
 

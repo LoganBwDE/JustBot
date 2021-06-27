@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { TwitchAuth } from "../../components/TwitchAuth/TwitchAuth";
+import { NoPermScreen } from "../NoPermScreen/NoPermScreen";
+import { TwitchBot } from "../TwitchBot/TwitchBot";
 import "./LoginScreen.css";
 
 export enum USERSTATE {
@@ -10,24 +12,27 @@ export enum USERSTATE {
 
 export function LoginScreen() {
   const [loggedIn, setLoggedIn] = useState<USERSTATE>(USERSTATE.NOT_LOGGED_IN);
+  const [userName, setUserName] = useState("");
 
-  const handleLogin = () => {
-    if (loggedIn === USERSTATE.LOGGED_IN) {
-    } else if (loggedIn === USERSTATE.LOGGED_IN_NO_PERM) {
+  const handleLogin = (user: string, loginState: USERSTATE) => {
+    if (loginState === USERSTATE.LOGGED_IN) {
+    } else if (loginState === USERSTATE.LOGGED_IN_NO_PERM) {
     }
+    setUserName(user);
+    setLoggedIn(loginState);
   };
 
   return (
     <>
       <div>
         {loggedIn === USERSTATE.LOGGED_IN ? (
-          <h2>You Logged In!</h2>
+          <TwitchBot user={userName} />
         ) : loggedIn === USERSTATE.LOGGED_IN_NO_PERM ? (
-          <h2>You Logged In but u got no perm!</h2>
+          <NoPermScreen />
         ) : (
           <>
             <h3>Login with Twitch</h3>
-            <TwitchAuth setLoggedIn={setLoggedIn} handleLogin={handleLogin} />
+            <TwitchAuth handleLogin={handleLogin} />
           </>
         )}
       </div>
