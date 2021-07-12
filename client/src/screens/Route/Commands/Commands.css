@@ -1,0 +1,21 @@
+.centered {
+  text-align: center;
+  display: flex;
+  flex: auto;
+  flex-direction: column;
+}
+
+.flexDisplay {
+  display: flex;
+}
+
+.flexAlign {
+  flex-grow: 1;
+}
+
+.addCommand {
+  cursor: pointer;
+  height: 3rem;
+  width: 3rem;
+  margin-top: 0.1rem;
+}

@@ -1,5 +1,9 @@
 import { useState } from "react";
 import { Navigation } from "../../components/Navigation/Navigation";
+import { Commands } from "../Route/Commands/Commands";
+import { Dashboard } from "../Route/Dashboard/Dashhboard";
+import { Giveaway } from "../Route/Giveaway/Giveaway";
+import { Settings } from "../Route/Settings/Settings";
 
 export enum Route {
   DASHBOARD,
@@ -18,32 +22,16 @@ export function TwitchBot(props: TwitchBotProps) {
   const renderSwitch = (route: Route) => {
     switch (route) {
       case Route.DASHBOARD: {
-        return (
-          <>
-            <h1>Dashboard</h1>
-          </>
-        );
+        return <Dashboard />;
       }
       case Route.COMMANDS: {
-        return (
-          <>
-            <h1>Commands</h1>
-          </>
-        );
+        return <Commands />;
       }
       case Route.GIVEAWAY: {
-        return (
-          <>
-            <h1>Giveaway</h1>
-          </>
-        );
+        return <Giveaway />;
       }
       case Route.SETTINGS: {
-        return (
-          <>
-            <h1>Settings</h1>
-          </>
-        );
+        return <Settings />;
       }
     }
   };

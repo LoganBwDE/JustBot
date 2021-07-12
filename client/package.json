@@ -1,5 +1,5 @@
 {
-  "name": "just-bot-web",
+  "name": "just-bot-web-client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -10,9 +10,11 @@
     "react": "^17.0.2",
     "react-bootstrap": "^1.6.1",
     "react-bootstrap-icons": "^1.5.0",
+    "react-data-table-component": "^7.0.0-rc2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
     "restful-react": "^15.6.0",
+    "styled-components": "^5.3.0",
     "twitch": "^4.5.5",
     "twitch-auth": "^4.5.5",
     "typescript": "^4.2.4"
