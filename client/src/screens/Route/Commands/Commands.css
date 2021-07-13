@@ -5,6 +5,10 @@
   flex-direction: column;
 }
 
+.buttonMarginR {
+  margin-right: 10%;
+}
+
 .flexDisplay {
   display: flex;
 }

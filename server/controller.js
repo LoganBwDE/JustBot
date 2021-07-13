@@ -40,6 +40,48 @@ router.get("/commands", function (req, res, next) {
   });
 });
 
+router.delete("/commands/:commandId", function (req, res, next) {
+  let con = getConnection();
+  con.connect(function (err) {
+    if (err) throw err;
+    let sql = "DELETE FROM commands where id ='" + req.params.commandId + "';";
+    con.query(sql, function (err, result) {
+      if (err) throw err;
+      con.end();
+      res.status(200);
+      res.send();
+    });
+  });
+});
+
+router.put("/commands", function (req, res, next) {
+  const cmd = JSON.parse(req.headers.cmd);
+  let con = getConnection();
+  con.connect(function (err) {
+    if (err) throw err;
+    let sql =
+      "INSERT INTO commands VALUES (" +
+      "NULL" +
+      ",'" +
+      cmd.cmd +
+      "','" +
+      cmd.name +
+      "','" +
+      cmd.typ +
+      "','" +
+      cmd.message +
+      "','" +
+      cmd.action +
+      "');";
+    con.query(sql, function (err, result) {
+      if (err) throw err;
+      con.end();
+      res.status(200);
+      res.send();
+    });
+  });
+});
+
 function createTablesIfNE(con) {
   for (let sql of sqlList) {
     con.query(sql, function (err, result) {});

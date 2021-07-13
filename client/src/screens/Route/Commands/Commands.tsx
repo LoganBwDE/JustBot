@@ -1,17 +1,36 @@
 import "./Commands.css";
 import * as BS from "react-bootstrap";
-import { PlusCircle } from "react-bootstrap-icons";
-import { useCallback, useEffect } from "react";
-import { initDB, loadCommands } from "../../../util/DBHandler";
+import { Pencil, PlusCircle, Trash } from "react-bootstrap-icons";
+import { useEffect } from "react";
+import {
+  addCommand,
+  deleteCommand,
+  initDB,
+  loadCommands,
+} from "../../../util/DBHandler";
 import { useState } from "react";
-import { Command, CommandTyp } from "../../../util/types";
+import { Command } from "../../../util/types";
 import DataTable, { RowRecord } from "react-data-table-component";
+import { CommandModal } from "../../../components/CommandModal/CommandModal";
 
 export function Commands() {
   const [commands, setCommands] = useState<Command[]>();
+  const [show, setShow] = useState(false);
+  let edit = false;
 
-  const handleDelete = (row: RowRecord) => {
-    console.log(row);
+  const handleDelete = async (row: RowRecord) => {
+    deleteCommand(row.id);
+    await load();
+  };
+
+  const saveNewCommand = async (newCommand: Command) => {
+    addCommand(newCommand);
+    await load();
+  };
+
+  const load = async () => {
+    await initDB();
+    setCommands(await loadCommands());
   };
 
   const handleEdit = (row: RowRecord) => {
@@ -21,23 +40,45 @@ export function Commands() {
   const ActionComponent = ({
     row,
     onClick,
-    text,
+    children,
+    variant,
   }: {
     row: RowRecord;
     onClick: (row: RowRecord) => void;
-    text: string;
+    children: React.ReactNode;
+    variant: string;
   }) => {
     const clickHandler = () => onClick(row);
 
-    return <BS.Button onClick={clickHandler}>{text}</BS.Button>;
+    return (
+      <BS.Button
+        variant={variant}
+        className="buttonMarginR"
+        onClick={clickHandler}
+      >
+        {children}
+      </BS.Button>
+    );
   };
 
   const columns = [
     {
       cell: (row: RowRecord) => (
-        <div>
-          <ActionComponent row={row} onClick={handleDelete} text="Löschen" />
-          <ActionComponent row={row} onClick={handleEdit} text="Editieren" />
+        <div className="flexDisplay">
+          <ActionComponent
+            row={row}
+            onClick={handleDelete}
+            variant="outline-danger"
+          >
+            <Trash />
+          </ActionComponent>
+          <ActionComponent
+            row={row}
+            onClick={handleEdit}
+            variant="outline-info"
+          >
+            <Pencil />
+          </ActionComponent>
         </div>
       ),
       ignoreRowClick: true,
@@ -72,10 +113,6 @@ export function Commands() {
   ];
 
   useEffect(() => {
-    const load = async () => {
-      await initDB();
-      setCommands(await loadCommands());
-    };
     load();
   }, []);
 
@@ -84,7 +121,13 @@ export function Commands() {
       <div className="centered">
         <div className="flexDisplay">
           <h1 className="flexAlign">Commands</h1>
-          <PlusCircle className="addCommand" />
+          <PlusCircle
+            className="addCommand"
+            onClick={() => {
+              setShow(true);
+              edit = false;
+            }}
+          />
         </div>
 
         {commands && (
@@ -92,6 +135,13 @@ export function Commands() {
             <DataTable columns={columns} data={commands} />
           </div>
         )}
+
+        <CommandModal
+          edit={edit}
+          setShow={setShow}
+          show={show}
+          saveCommand={saveNewCommand}
+        />
       </div>
     </>
   );
