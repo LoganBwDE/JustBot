@@ -59,20 +59,39 @@ router.put("/commands", function (req, res, next) {
   let con = getConnection();
   con.connect(function (err) {
     if (err) throw err;
-    let sql =
-      "INSERT INTO commands VALUES (" +
-      "NULL" +
-      ",'" +
-      cmd.cmd +
-      "','" +
-      cmd.name +
-      "','" +
-      cmd.typ +
-      "','" +
-      cmd.message +
-      "','" +
-      cmd.action +
-      "');";
+    let sql = "";
+    if (cmd.id === 0) {
+      sql =
+        "INSERT INTO commands VALUES (" +
+        "NULL" +
+        ",'" +
+        cmd.cmd +
+        "','" +
+        cmd.name +
+        "','" +
+        cmd.typ +
+        "','" +
+        cmd.message +
+        "','" +
+        cmd.action +
+        "');";
+    } else {
+      sql =
+        "UPDATE commands SET cmd='" +
+        cmd.cmd +
+        "',name='" +
+        cmd.name +
+        "',typ='" +
+        cmd.typ +
+        "',message='" +
+        cmd.message +
+        "',action='" +
+        cmd.action +
+        "' where id='" +
+        cmd.id +
+        "';";
+    }
+
     con.query(sql, function (err, result) {
       if (err) throw err;
       con.end();

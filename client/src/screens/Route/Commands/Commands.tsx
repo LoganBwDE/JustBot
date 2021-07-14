@@ -16,7 +16,14 @@ import { CommandModal } from "../../../components/CommandModal/CommandModal";
 export function Commands() {
   const [commands, setCommands] = useState<Command[]>();
   const [show, setShow] = useState(false);
+  const [row, setRow] = useState<RowRecord>([]);
   let edit = false;
+
+  useEffect(() => {
+    if (!show) {
+      setRow([]);
+    }
+  }, [show]);
 
   const handleDelete = async (row: RowRecord) => {
     deleteCommand(row.id);
@@ -33,8 +40,10 @@ export function Commands() {
     setCommands(await loadCommands());
   };
 
-  const handleEdit = (row: RowRecord) => {
-    console.log(row);
+  const handleEdit = (editRow: RowRecord) => {
+    setRow(editRow);
+    edit = true;
+    setShow(true);
   };
 
   const ActionComponent = ({
@@ -96,6 +105,11 @@ export function Commands() {
       sortable: true,
     },
     {
+      name: "CommandName",
+      selector: "name",
+      sortable: true,
+    },
+    {
       name: "Typ",
       selector: "typ",
       sortable: true,
@@ -124,8 +138,9 @@ export function Commands() {
           <PlusCircle
             className="addCommand"
             onClick={() => {
-              setShow(true);
+              setRow([]);
               edit = false;
+              setShow(true);
             }}
           />
         </div>
@@ -141,6 +156,7 @@ export function Commands() {
           setShow={setShow}
           show={show}
           saveCommand={saveNewCommand}
+          editCmd={row as Command}
         />
       </div>
     </>

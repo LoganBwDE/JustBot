@@ -13,3 +13,16 @@ button.close {
   text-shadow: 0 1px 0 #fff;
   opacity: 0.5;
 }
+
+.divTextCenter {
+  text-align: center;
+}
+
+.formMargin {
+  margin-top: 2%;
+}
+
+.modalWidth {
+  width: 55%;
+  max-width: 55%;
+}
