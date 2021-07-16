@@ -43,6 +43,10 @@ export function CommandModal(props: CommandModalProps) {
     });
   };
 
+  //http://localhost:3000/ , http://94.16.106.143/phpMyAdmin/index.php?route=/sql&db=justbot&table=commands&pos=0,
+  //https://icons.getbootstrap.com/#usage, https://jbetancur.github.io/react-data-table-component/?path=/story/general--kitchen-sink
+  //https://react-bootstrap.github.io/components/forms/
+
   return (
     <>
       <BS.Modal
