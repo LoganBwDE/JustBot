@@ -4,7 +4,8 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
-const { twitch, router } = require("./controller");
+const router = require("./controller");
+const twitch = require("./twitch");
 
 var app = express();
 

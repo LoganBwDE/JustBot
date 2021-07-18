@@ -1,8 +1,7 @@
 var mysql = require("mysql");
 var express = require("express");
 var router = express.Router();
-const tmi = require("tmi.js");
-let ajax = require("superagent");
+const { startGiveaway, stopGiveaway, rollGiveaway } = require("./giveaway");
 
 let sqlList = [
   "CREATE TABLE IF NOT EXISTS `commands` (`id` int(11) NOT NULL AUTO_INCREMENT, `cmd` varchar(50) NOT NULL, `name` varchar(50) NOT NULL, `typ` enum('NONE','TWITCH','RIOT','GIVEAWAY') NOT NULL DEFAULT 'NONE', `message` varchar(1000) NOT NULL, `action` varchar(1000) DEFAULT NULL, PRIMARY KEY (id));",
@@ -33,6 +32,35 @@ router.get("/commands", function (req, res, next) {
   con.connect(function (err) {
     if (err) throw err;
     let sql = "SELECT * FROM commands;";
+    con.query(sql, function (err, result) {
+      if (err) throw err;
+      con.end();
+      res.status(200);
+      res.send(result);
+    });
+  });
+});
+
+router.get("/settings/:settingsName", function (req, res, next) {
+  let con = getConnection();
+  con.connect(function (err) {
+    if (err) throw err;
+    let sql =
+      "SELECT * FROM settings where name='" + req.params.settingsName + "';";
+    con.query(sql, function (err, result) {
+      if (err) throw err;
+      con.end();
+      res.status(200);
+      res.send(result);
+    });
+  });
+});
+
+router.get("/giveaway", function (req, res, next) {
+  let con = getConnection();
+  con.connect(function (err) {
+    if (err) throw err;
+    let sql = "SELECT * FROM giveaway;";
     con.query(sql, function (err, result) {
       if (err) throw err;
       con.end();
@@ -119,51 +147,4 @@ function getConnection() {
   });
 }
 
-function handleCMDResult(commands, client) {
-  //New Chat Message
-  const cmds = [];
-
-  for (const d of commands) {
-    cmds.push(d.cmd);
-  }
-  client.on("message", (channel, tags, message, self) => {
-    const sendCmd = message.split(" ")[0].toLowerCase();
-    if (cmds.includes(sendCmd)) {
-      console.log("geht zumindest", sendCmd);
-    }
-  });
-}
-
-function twitch() {
-  //Setup Chat Client
-
-  const client = new tmi.Client({
-    options: { debug: true },
-    connection: {
-      reconnect: true,
-      secure: true,
-    },
-    identity: {
-      username: "loganbwdebot",
-      password: process.env.TWITCH_AUTH,
-    },
-    channels: ["loganbwde"],
-  });
-
-  client.connect();
-
-  //Load Commands
-  let con = getConnection();
-  con.connect(function (err) {
-    if (err) throw err;
-    let sql = "SELECT * FROM commands;";
-    con.query(sql, function (err, result) {
-      if (err) throw err;
-      con.end();
-      handleCMDResult(result, client);
-    });
-  });
-}
-
-module.exports.router = router;
-module.exports.twitch = twitch;
+module.exports = router;
