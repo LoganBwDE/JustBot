@@ -1,6 +1,6 @@
 import "./CommandModal.css";
 import * as BS from "react-bootstrap";
-import { Command, CommandTyp } from "../../util/types";
+import { Command, CommandAction, CommandTyp } from "../../util/types";
 import { useState } from "react";
 import { useEffect } from "react";
 
@@ -17,7 +17,7 @@ export function CommandModal(props: CommandModalProps) {
   const [name, setName] = useState("");
   const [typ, setTyp] = useState<CommandTyp>(CommandTyp.NONE);
   const [message, setMessage] = useState("");
-  const [action, setAction] = useState("");
+  const [action, setAction] = useState<CommandAction>(CommandAction.MESSAGE);
 
   useEffect(() => {
     if (props.editCmd !== undefined) {
@@ -42,10 +42,6 @@ export function CommandModal(props: CommandModalProps) {
       action: action,
     });
   };
-
-  //http://localhost:3000/ , http://94.16.106.143/phpMyAdmin/index.php?route=/sql&db=justbot&table=commands&pos=0,
-  //https://icons.getbootstrap.com/#usage, https://jbetancur.github.io/react-data-table-component/?path=/story/general--kitchen-sink
-  //https://react-bootstrap.github.io/components/forms/
 
   return (
     <>
@@ -124,10 +120,13 @@ export function CommandModal(props: CommandModalProps) {
                   <option hidden selected disabled>
                     CommandTyp
                   </option>
-                  <option value="NONE">None</option>
-                  <option value="TWITCH">Twitch</option>
-                  <option value="RIOT">Riot</option>
-                  <option value="GIVEAWAY">Giveaway</option>
+                  {Object.keys(CommandTyp).map((k) => {
+                    return (
+                      <option value={k}>
+                        {k.charAt(0).toUpperCase() + k.slice(1)}
+                      </option>
+                    );
+                  })}
                 </BS.Form.Select>
               </BS.Col>
             </BS.Form.Group>
@@ -157,12 +156,30 @@ export function CommandModal(props: CommandModalProps) {
                 Command Aktion
               </BS.Form.Label>
               <BS.Col sm="10">
-                <BS.Form.Control
-                  onChange={(e) => setAction(e.target.value)}
-                  type="text"
-                  placeholder="CommandAction"
+                <BS.Form.Select
+                  onChange={(e) =>
+                    setAction(e.currentTarget.value as CommandAction)
+                  }
+                  aria-label="CommandAction"
                   value={action}
-                />
+                >
+                  <option hidden selected disabled>
+                    CommandAction
+                  </option>
+                  {Object.keys(CommandAction)
+                    .filter((k) => {
+                      if (typ !== CommandTyp.NONE)
+                        return k.startsWith(typ as string);
+                      else return k === CommandAction.MESSAGE;
+                    })
+                    .map((k) => {
+                      return (
+                        <option value={k}>
+                          {k.charAt(0).toUpperCase() + k.slice(1)}
+                        </option>
+                      );
+                    })}
+                </BS.Form.Select>
               </BS.Col>
             </BS.Form.Group>
           </BS.Form>
