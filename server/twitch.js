@@ -221,7 +221,7 @@ async function handleCMDResult(client, channel, tags, message, commands) {
       }
       case "RIOT": {
         const responseData = await handleRiotCmd(cmdAction);
-        if (Array.isArray(responseData)) riotData = responseData;
+        if (cmdAction !== "RIOT_WINLOSE") riotData = responseData;
         else data = responseData;
         break;
       }
@@ -279,7 +279,7 @@ function sendClientMessage(
     .replace("%commands%", commands.join(", ").replace(/, ([^,]*)$/, " and $1"))
     .replace("%apidata%", apiData);
   if (riotApiData) {
-    replacedCmdMsg
+    replacedCmdMsg = replacedCmdMsg
       .replace(
         "%riotdata1%",
         riotApiData[1].tier +
@@ -302,6 +302,12 @@ function sendClientMessage(
 }
 
 function twitch() {
+  //initDB
+  const requestOptions = {
+    method: "POST",
+  };
+  fetch("http://localhost:9000/initDB", requestOptions);
+
   //Setup Chat Client
 
   const client = new tmi.Client({

@@ -1,0 +1,19 @@
+.createGiveaway,
+.addKey {
+  font-size: x-large;
+  font-weight: bold;
+}
+
+.addKey {
+  margin-top: 3%;
+}
+
+.formAdjust {
+  width: 60%;
+  margin: 2% 20% 0 20%;
+}
+
+.createGiveawayBtn {
+  width: 50%;
+  margin: 0 25% 0 25%;
+}

@@ -26,3 +26,14 @@ export interface Command {
   message: string;
   action: CommandAction;
 }
+
+export interface Giveaway {
+  id: number;
+  cmd: string;
+  endDate: Date;
+}
+
+export enum RewardTyp {
+  KEY = "KEY",
+  OTHER = "OTHER",
+}

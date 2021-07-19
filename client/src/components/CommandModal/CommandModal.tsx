@@ -5,7 +5,6 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 type CommandModalProps = {
-  edit: boolean;
   editCmd?: Command;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   show: boolean;
@@ -52,11 +51,11 @@ export function CommandModal(props: CommandModalProps) {
       >
         <BS.Modal.Header closeButton closeLabel="">
           <BS.Modal.Title>
-            Command {props.edit ? "bearbeiten" : "hinzufügen"}
+            {props.editCmd?.id ? "Edit" : "Add"} Command
           </BS.Modal.Title>
         </BS.Modal.Header>
         <BS.Modal.Body>
-          <div className="divTextCenter">Bitte jede Spalte ausfüllen!</div>
+          <div className="divTextCenter">Every row needs to be filled out!</div>
           <BS.Form className="formMargin">
             {props.editCmd?.id && (
               <BS.Form.Group as={BS.Row} className="mb-3" controlId="formID">
@@ -92,13 +91,13 @@ export function CommandModal(props: CommandModalProps) {
               controlId="formCommandName"
             >
               <BS.Form.Label column sm="2">
-                Command Name
+                Description
               </BS.Form.Label>
               <BS.Col sm="10">
                 <BS.Form.Control
                   onChange={(e) => setName(e.target.value)}
                   type="text"
-                  placeholder="CommandName"
+                  placeholder="CommandDescription"
                   value={name}
                 />
               </BS.Col>
@@ -109,12 +108,12 @@ export function CommandModal(props: CommandModalProps) {
               controlId="formCommandTyp"
             >
               <BS.Form.Label column sm="2">
-                Command Typ
+                Type
               </BS.Form.Label>
               <BS.Col sm="10">
                 <BS.Form.Select
                   onChange={(e) => setTyp(e.currentTarget.value as CommandTyp)}
-                  aria-label="CommandTyp"
+                  aria-label="CommandType"
                   value={typ}
                 >
                   <option hidden selected disabled>
@@ -136,7 +135,7 @@ export function CommandModal(props: CommandModalProps) {
               controlId="formCommandMessage"
             >
               <BS.Form.Label column sm="2">
-                Command Nachricht
+                Message
               </BS.Form.Label>
               <BS.Col sm="10">
                 <BS.Form.Control
@@ -153,7 +152,7 @@ export function CommandModal(props: CommandModalProps) {
               controlId="formCommandAction"
             >
               <BS.Form.Label column sm="2">
-                Command Aktion
+                Action
               </BS.Form.Label>
               <BS.Col sm="10">
                 <BS.Form.Select
@@ -186,10 +185,10 @@ export function CommandModal(props: CommandModalProps) {
         </BS.Modal.Body>
         <BS.Modal.Footer>
           <BS.Button variant="danger" onClick={handleClose}>
-            Schließen
+            Close
           </BS.Button>
           <BS.Button variant="success" onClick={handleSaveCommand}>
-            Speichern
+            Save
           </BS.Button>
         </BS.Modal.Footer>
       </BS.Modal>

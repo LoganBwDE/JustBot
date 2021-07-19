@@ -1,12 +1,4 @@
-import { Command } from "./types";
-
-export async function initDB() {
-  const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-  };
-  await fetch("http://localhost:9000/initDB", requestOptions);
-}
+import { Command, Giveaway } from "./types";
 
 export async function loadCommands(): Promise<Command[]> {
   const requestOptions = {
@@ -32,4 +24,16 @@ export async function addCommand(cmd: Command) {
     headers: { "Content-Type": "application/json", cmd: JSON.stringify(cmd) },
   };
   await fetch("http://localhost:9000/commands/", requestOptions);
+}
+
+export async function loadGiveaway(): Promise<Giveaway> {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  };
+  return (
+    (await (
+      await fetch("http://localhost:9000/giveaway", requestOptions)
+    ).json()) as Array<Giveaway>
+  )[0];
 }

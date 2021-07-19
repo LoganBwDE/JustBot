@@ -5,6 +5,10 @@
   flex-direction: column;
 }
 
+.headingPL {
+  padding-left: 3%;
+}
+
 .buttonMarginR {
   margin-right: 10%;
 }
@@ -30,4 +34,9 @@
 
 .hkcGBu {
   overflow: visible !important;
+}
+
+.edTgaw div:first-child {
+  text-align: left;
+  white-space: unset !important;
 }

@@ -31,7 +31,7 @@ export function Navigation(props: NavigationProps) {
                 <ArrowLeftCircle className="bgDark" />
               </BS.Button>
               <ul className="navbar-nav">
-                <li className="nav-item">Benutzer: {props.user}</li>
+                <li className="nav-item">User: {props.user}</li>
               </ul>
             </div>
           </BS.Nav>

@@ -11,7 +11,7 @@ export function Sidebar(props: SidebarProps) {
     <>
       <div className="border-end bg-white" id="sidebar-wrapper">
         <div className="sidebar-heading border-bottom bg-light">
-          JustBot - LoganBwDE
+          JustBot by LoganBwDE
         </div>
         <div className="list-group list-group-flush">
           <ul className="list-mp">

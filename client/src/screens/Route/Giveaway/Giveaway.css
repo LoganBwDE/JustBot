@@ -1,0 +1,6 @@
+.centered {
+  text-align: center;
+  display: flex;
+  flex: auto;
+  flex-direction: column;
+}

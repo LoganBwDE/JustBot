@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import {
   addCommand,
   deleteCommand,
-  initDB,
   loadCommands,
 } from "../../../util/DBHandler";
 import { useState } from "react";
@@ -13,11 +12,11 @@ import { Command } from "../../../util/types";
 import DataTable, { RowRecord } from "react-data-table-component";
 import { CommandModal } from "../../../components/CommandModal/CommandModal";
 
-export function Commands() {
+export function CommandRoute() {
   const [commands, setCommands] = useState<Command[]>();
   const [show, setShow] = useState(false);
   const [row, setRow] = useState<RowRecord>([]);
-  let edit = false;
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!show) {
@@ -36,13 +35,12 @@ export function Commands() {
   };
 
   const load = async () => {
-    await initDB();
     setCommands(await loadCommands());
+    setLoading(false);
   };
 
   const handleEdit = (editRow: RowRecord) => {
     setRow(editRow);
-    edit = true;
     setShow(true);
   };
 
@@ -105,22 +103,22 @@ export function Commands() {
       sortable: true,
     },
     {
-      name: "CommandName",
+      name: "Description",
       selector: "name",
       sortable: true,
     },
     {
-      name: "Typ",
+      name: "Type",
       selector: "typ",
       sortable: true,
     },
     {
-      name: "Nachricht",
+      name: "Message",
       selector: "message",
       sortable: true,
     },
     {
-      name: "Aktion",
+      name: "Action",
       selector: "action",
       sortable: true,
     },
@@ -134,25 +132,29 @@ export function Commands() {
     <>
       <div className="centered">
         <div className="flexDisplay">
-          <h1 className="flexAlign">Commands</h1>
+          <h1 className="flexAlign headingPL">Commands</h1>
           <PlusCircle
             className="addCommand"
             onClick={() => {
               setRow([]);
-              edit = false;
               setShow(true);
             }}
           />
         </div>
 
-        {commands && (
-          <div>
-            <DataTable columns={columns} data={commands} />
-          </div>
+        {!loading ? (
+          commands && (
+            <div>
+              <DataTable columns={columns} data={commands} />
+            </div>
+          )
+        ) : (
+          <>
+            <span>Loading...</span>
+          </>
         )}
 
         <CommandModal
-          edit={edit}
           setShow={setShow}
           show={show}
           saveCommand={saveNewCommand}
