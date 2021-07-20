@@ -30,10 +30,18 @@ export interface Command {
 export interface Giveaway {
   id: number;
   cmd: string;
+  prize?: string;
+  keyID?: number;
   endDate: Date;
 }
 
 export enum RewardTyp {
   KEY = "KEY",
   OTHER = "OTHER",
+}
+
+export interface Key {
+  id: number;
+  keyname: string;
+  keycode: string;
 }

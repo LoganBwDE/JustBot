@@ -70,6 +70,20 @@ router.get("/giveaway", function (req, res, next) {
   });
 });
 
+router.get("/keys", function (req, res, next) {
+  let con = getConnection();
+  con.connect(function (err) {
+    if (err) throw err;
+    let sql = "SELECT * FROM giveawayKeys;";
+    con.query(sql, function (err, result) {
+      if (err) throw err;
+      con.end();
+      res.status(200);
+      res.send(result);
+    });
+  });
+});
+
 router.delete("/commands/:commandId", function (req, res, next) {
   let con = getConnection();
   con.connect(function (err) {
