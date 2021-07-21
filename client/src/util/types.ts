@@ -33,6 +33,7 @@ export interface Giveaway {
   prize?: string;
   keyID?: number;
   endDate: Date;
+  autopickwinner: boolean;
 }
 
 export enum RewardTyp {

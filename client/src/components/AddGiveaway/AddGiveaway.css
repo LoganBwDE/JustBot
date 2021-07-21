@@ -4,16 +4,26 @@
   font-weight: bold;
 }
 
-.addKey {
-  margin-top: 3%;
-}
-
 .formAdjust {
   width: 70%;
   margin: 2% 15% 0 15%;
 }
 
-.createGiveawayBtn {
+.createGiveawayBtn,
+.addKeyBtn {
   width: 50%;
   margin: 0 25% 0 25%;
+}
+
+.rdtSwitch:hover {
+  background: #eeeeee;
+  cursor: pointer;
+}
+
+.noty_layout {
+  margin-top: 2% !important;
+}
+
+.form-switch {
+  float: left;
 }

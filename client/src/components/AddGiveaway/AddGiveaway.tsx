@@ -3,48 +3,76 @@ import * as BS from "react-bootstrap";
 import { useState } from "react";
 import { Giveaway, Key, RewardTyp } from "../../util/types";
 import { useEffect } from "react";
-import { loadGiveawayKeys } from "../../util/DBHandler";
+import { createGiveaway, loadGiveawayKeys } from "../../util/DBHandler";
+import "react-datetime/css/react-datetime.css";
+import * as moment from "moment";
+import "moment/locale/de";
+import DateTime from "react-datetime";
+
+import Noty from "noty";
+
+import "noty/lib/noty.css";
+import "noty/lib/themes/bootstrap-v4.css";
 
 export function AddGiveaway() {
   const [joinCmd, setJoinCmd] = useState("");
   const [rewardTyp, setRewardTyp] = useState<RewardTyp>(RewardTyp.KEY);
   const [selectedKey, setSelectedKey] = useState<Key>();
   const [prize, setPrize] = useState("");
+  const [autoPickWinner, setAutoPickWinner] = useState(true);
   const [endDate, setEndDate] = useState<Date>(new Date());
   const [keys, setKeys] = useState<Key[]>([]);
 
   useEffect(() => {
     loadKeys();
+    checkLanguage();
   }, []);
-
-  const addKey = () => {};
 
   const loadKeys = async () => {
     setKeys(await loadGiveawayKeys());
   };
 
-  const createGiveaway = () => {
+  const checkLanguage = () => {
+    const locale = window.navigator.language;
+    if (locale.startsWith("de")) {
+      moment.locale("de");
+    }
+  };
+
+  const createGiveawayObjectAndSend = async () => {
+    let giveaway: Giveaway;
     if (rewardTyp === RewardTyp.KEY) {
-      const giveaway: Giveaway = {
+      giveaway = {
         id: 0,
         cmd: joinCmd,
         keyID: selectedKey?.id,
         endDate: endDate,
+        autopickwinner: autoPickWinner,
       };
     } else {
-      const giveaway: Giveaway = {
+      giveaway = {
         id: 0,
         cmd: joinCmd,
         prize: prize,
         endDate: endDate,
+        autopickwinner: autoPickWinner,
       };
     }
+    const response = await createGiveaway(giveaway);
+
+    new Noty({
+      theme: "bootstrap-v4",
+      type: response.status === 200 ? "success" : "error",
+      text:
+        response.status === 200
+          ? "Giveaway created successfully!"
+          : "Giveaway could not be created",
+      timeout: 5000,
+    }).show();
   };
 
   return (
     <>
-      <span className="addKey">Add Key</span>
-      <hr />
       <span className="createGiveaway">Create Giveaway</span>
       <BS.Form className="formAdjust">
         <BS.Form.Group as={BS.Row} className="mb-3" controlId="formJoinCommand">
@@ -99,7 +127,7 @@ export function AddGiveaway() {
                   );
                 }}
                 aria-label="RewardType"
-                value={selectedKey?.keyname}
+                value={selectedKey?.id}
               >
                 {keys.map((k) => {
                   return <option value={k.id}>{k.keyname}</option>;
@@ -127,17 +155,33 @@ export function AddGiveaway() {
             Select End Date & Time
           </BS.Form.Label>
           <BS.Col sm="10">
-            <BS.Form.Control
-              onChange={(e) => setEndDate(new Date(e.target.value))}
-              type="date"
-              name="Prize"
-              value={endDate.toISOString()}
+            <DateTime
+              value={endDate}
+              onChange={(changedDate) => {
+                const date =
+                  typeof changedDate === "string"
+                    ? new Date(changedDate as string)
+                    : (changedDate as moment.Moment).toDate();
+                setEndDate(new Date(date));
+              }}
+            />
+          </BS.Col>
+        </BS.Form.Group>
+        <BS.Form.Group as={BS.Row} className="mb-3" controlId="formDate">
+          <BS.Form.Label column sm="2">
+            Should be the winner automatically picked?
+          </BS.Form.Label>
+          <BS.Col sm="10">
+            <BS.Form.Check
+              onChange={(e) => setAutoPickWinner(e.currentTarget.checked)}
+              type="switch"
+              checked={autoPickWinner}
             />
           </BS.Col>
         </BS.Form.Group>
         <div>
           <BS.Button
-            onClick={() => createGiveaway()}
+            onClick={() => createGiveawayObjectAndSend()}
             variant="success"
             className="createGiveawayBtn"
           >

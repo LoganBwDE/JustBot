@@ -3,7 +3,6 @@ import * as BS from "react-bootstrap";
 import { Command, CommandAction, CommandTyp } from "../../util/types";
 import { useState } from "react";
 import { useEffect } from "react";
-
 type CommandModalProps = {
   editCmd?: Command;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;

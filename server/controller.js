@@ -70,6 +70,58 @@ router.get("/giveaway", function (req, res, next) {
   });
 });
 
+router.post("/giveaway", function (req, res, next) {
+  const giveaway = JSON.parse(req.headers.giveaway);
+  let con = getConnection();
+  con.connect(function (err) {
+    if (err) throw err;
+    let sql =
+      "INSERT INTO giveaway VALUES (" +
+      "NULL" +
+      ",'" +
+      giveaway.cmd +
+      "'," +
+      (giveaway.prize !== undefined ? "'" + giveaway.prize + "'" : "NULL") +
+      "," +
+      (giveaway.keyID !== undefined ? "'" + giveaway.keyID + "'" : "NULL") +
+      ",'" +
+      giveaway.endDate.replace("T", " ").replace("Z", " ") +
+      "'," +
+      giveaway.autopickwinner +
+      ");";
+
+    con.query(sql, function (err, result) {
+      if (err) throw err;
+      con.end();
+      res.status(200);
+      res.send();
+    });
+  });
+});
+
+router.put("/keys", function (req, res, next) {
+  const key = JSON.parse(req.headers.key);
+  let con = getConnection();
+  con.connect(function (err) {
+    if (err) throw err;
+    let sql =
+      "INSERT INTO giveawayKeys VALUES (" +
+      "NULL" +
+      ",'" +
+      key.keyname +
+      "','" +
+      key.keycode +
+      "');";
+
+    con.query(sql, function (err, result) {
+      if (err) throw err;
+      con.end();
+      res.status(200);
+      res.send();
+    });
+  });
+});
+
 router.get("/keys", function (req, res, next) {
   let con = getConnection();
   con.connect(function (err) {

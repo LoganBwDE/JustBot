@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import { AddGiveaway } from "../../../components/AddGiveaway/AddGiveaway";
+import { AddKey } from "../../../components/AddKey/AddKey";
 import { ManageGiveaway } from "../../../components/ManageGiveaway/ManageGiveaway";
 import { loadGiveaway } from "../../../util/DBHandler";
 import { Giveaway } from "../../../util/types";
@@ -25,9 +26,17 @@ export function GiveawayRoute() {
         <h1>Giveaway</h1>
         {!loading ? (
           giveaway ? (
-            <ManageGiveaway giveaway={giveaway} />
+            <>
+              <ManageGiveaway giveaway={giveaway} />
+              <hr />
+              <AddKey />
+            </>
           ) : (
-            <AddGiveaway />
+            <>
+              <AddGiveaway />
+              <hr />
+              <AddKey />
+            </>
           )
         ) : (
           <>

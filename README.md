@@ -4,10 +4,9 @@ Custom Twitch Bot with Web-UI
 
 Todo:
 
+- Commands aktualisiert nicht
 - Giveaway
-  - Add Giveaway Key
-  - Key -> Key direkt festgelegt bzw per Nachricht
-  - Item -> Nur Nachricht bzw. festgelegter Inhalt
+  - Manage Giveaway -> Stop, Roll, Show Users etc
 - Settings ->
   - Chat Filter?
   - URL Filter?

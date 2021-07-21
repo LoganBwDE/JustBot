@@ -41,10 +41,21 @@ export async function loadGiveaway(): Promise<Giveaway> {
 export async function createGiveaway(giveaway: Giveaway) {
   const requestOptions = {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      giveaway: JSON.stringify(giveaway),
+    },
   };
 
-  await (await fetch("http://localhost:9000/giveaway", requestOptions)).json();
+  return await fetch("http://localhost:9000/giveaway", requestOptions);
+}
+
+export async function addGiveawayKey(key: Key) {
+  const requestOptions = {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", key: JSON.stringify(key) },
+  };
+  return await fetch("http://localhost:9000/keys/", requestOptions);
 }
 
 export async function loadGiveawayKeys(): Promise<Key[]> {

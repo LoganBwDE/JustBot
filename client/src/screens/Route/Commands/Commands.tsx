@@ -25,12 +25,12 @@ export function CommandRoute() {
   }, [show]);
 
   const handleDelete = async (row: RowRecord) => {
-    deleteCommand(row.id);
+    await deleteCommand(row.id);
     await load();
   };
 
   const saveNewCommand = async (newCommand: Command) => {
-    addCommand(newCommand);
+    await addCommand(newCommand);
     await load();
   };
 
