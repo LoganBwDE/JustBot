@@ -38,6 +38,18 @@ export async function loadGiveaway(): Promise<Giveaway> {
   )[0];
 }
 
+export async function loadKeyName(key: number): Promise<Key> {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  };
+  return (
+    (await (
+      await fetch("http://localhost:9000/keys/" + key, requestOptions)
+    ).json()) as Array<Key>
+  )[0];
+}
+
 export async function createGiveaway(giveaway: Giveaway) {
   const requestOptions = {
     method: "POST",

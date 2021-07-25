@@ -3,7 +3,7 @@ import * as BS from "react-bootstrap";
 import { useState } from "react";
 import { Giveaway, Key, RewardTyp } from "../../util/types";
 import { useEffect } from "react";
-import { createGiveaway, loadGiveawayKeys } from "../../util/DBHandler";
+import { createGiveaway } from "../../util/DBHandler";
 import "react-datetime/css/react-datetime.css";
 import * as moment from "moment";
 import "moment/locale/de";
@@ -14,23 +14,22 @@ import Noty from "noty";
 import "noty/lib/noty.css";
 import "noty/lib/themes/bootstrap-v4.css";
 
-export function AddGiveaway() {
+type AddGiveawayProps = {
+  setGiveaway: React.Dispatch<React.SetStateAction<Giveaway | undefined>>;
+  keys: Key[];
+};
+
+export function AddGiveaway(props: AddGiveawayProps) {
   const [joinCmd, setJoinCmd] = useState("");
   const [rewardTyp, setRewardTyp] = useState<RewardTyp>(RewardTyp.KEY);
   const [selectedKey, setSelectedKey] = useState<Key>();
   const [prize, setPrize] = useState("");
   const [autoPickWinner, setAutoPickWinner] = useState(true);
   const [endDate, setEndDate] = useState<Date>(new Date());
-  const [keys, setKeys] = useState<Key[]>([]);
 
   useEffect(() => {
-    loadKeys();
     checkLanguage();
   }, []);
-
-  const loadKeys = async () => {
-    setKeys(await loadGiveawayKeys());
-  };
 
   const checkLanguage = () => {
     const locale = window.navigator.language;
@@ -45,7 +44,7 @@ export function AddGiveaway() {
       giveaway = {
         id: 0,
         cmd: joinCmd,
-        keyID: selectedKey?.id,
+        keyID: selectedKey !== undefined ? selectedKey.id : props.keys[0].id,
         endDate: endDate,
         autopickwinner: autoPickWinner,
       };
@@ -59,6 +58,7 @@ export function AddGiveaway() {
       };
     }
     const response = await createGiveaway(giveaway);
+    if (response.status === 200) props.setGiveaway(giveaway);
 
     new Noty({
       theme: "bootstrap-v4",
@@ -121,7 +121,7 @@ export function AddGiveaway() {
               <BS.Form.Select
                 onChange={(e) => {
                   setSelectedKey(
-                    keys.find(({ id }) => {
+                    props.keys.find(({ id }) => {
                       return id === parseInt(e.currentTarget.value);
                     })
                   );
@@ -129,7 +129,7 @@ export function AddGiveaway() {
                 aria-label="RewardType"
                 value={selectedKey?.id}
               >
-                {keys.map((k) => {
+                {props.keys.map((k) => {
                   return <option value={k.id}>{k.keyname}</option>;
                 })}
               </BS.Form.Select>

@@ -1,0 +1,26 @@
+.manageCard {
+  width: 70%;
+  margin: 2% 15% 0 15%;
+  display: flex;
+  flex-direction: row;
+}
+
+.manageText {
+  font-size: x-large;
+  font-weight: bold;
+}
+
+.horizontalHR {
+  border: none;
+  border-left: 1px solid hsla(200, 10%, 50%, 100);
+  height: auto !important;
+  width: 1px;
+}
+
+.card-body {
+  width: 50% !important;
+}
+
+.btnMarg {
+  margin: 0 2% 0 2%;
+}

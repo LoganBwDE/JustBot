@@ -4,7 +4,6 @@ Custom Twitch Bot with Web-UI
 
 Todo:
 
-- Commands aktualisiert nicht
 - Giveaway
   - Manage Giveaway -> Stop, Roll, Show Users etc
 - Settings ->

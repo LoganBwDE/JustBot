@@ -9,7 +9,11 @@ import Noty from "noty";
 import "noty/lib/noty.css";
 import "noty/lib/themes/bootstrap-v4.css";
 
-export function AddKey() {
+type AddKeyProps = {
+  loadKeys: () => void;
+};
+
+export function AddKey(props: AddKeyProps) {
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
 
@@ -20,6 +24,8 @@ export function AddKey() {
 
     setName("");
     setCode("");
+
+    if (response.status === 200) props.loadKeys();
 
     new Noty({
       theme: "bootstrap-v4",
